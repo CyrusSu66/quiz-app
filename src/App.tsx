@@ -19,7 +19,7 @@ function App() {
   const [studentId, setStudentId] = useState('');
   const [studentName, setStudentName] = useState('');
   const [startTime, setStartTime] = useState<Date | null>(null);
-  const [endTime, setEndTime] = useState<Date | null>(null);
+  const [, setEndTime] = useState<Date | null>(null);
   const [apiUrl, setApiUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);

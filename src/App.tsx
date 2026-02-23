@@ -17,7 +17,8 @@ function App() {
 
   // Load questions
   useEffect(() => {
-    fetch('/questions.json')
+    const basePath = import.meta.env.BASE_URL;
+    fetch(`${basePath}questions.json`)
       .then(res => res.json())
       .then(data => setQuestions(data))
       .catch(err => console.error("Error loading questions:", err));
@@ -157,8 +158,8 @@ function App() {
                   key={idx}
                   onClick={() => handleSelectOption(idx)}
                   className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 font-medium ${selectedAnswers[currentQuestionIndex] === idx
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 text-gray-700'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 text-gray-700'
                     }`}
                 >
                   <span className="inline-block w-8 font-bold text-gray-400">

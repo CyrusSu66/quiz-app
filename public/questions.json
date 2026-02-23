@@ -1,0 +1,35 @@
+[
+    {
+        "id": 1,
+        "question": "What is the capital of Taiwan?",
+        "options": [
+            "Taipei",
+            "Kaohsiung",
+            "Taichung",
+            "Tainan"
+        ],
+        "answerIndex": 0
+    },
+    {
+        "id": 2,
+        "question": "Which programming language is known as the 'mother of all languages'?",
+        "options": [
+            "Java",
+            "C",
+            "Python",
+            "Assembly"
+        ],
+        "answerIndex": 1
+    },
+    {
+        "id": 3,
+        "question": "What does CSS stand for?",
+        "options": [
+            "Computer Style Sheets",
+            "Creative Style Sheets",
+            "Cascading Style Sheets",
+            "Colorful Style Sheets"
+        ],
+        "answerIndex": 2
+    }
+]

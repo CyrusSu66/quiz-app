@@ -99,7 +99,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 user-select-none">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6 sm:p-12 user-select-none">
 
       {/* Anti-cheat Overlay */}
       {isOverlayVisible && (
@@ -114,7 +114,7 @@ function App() {
         </div>
       )}
 
-      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg p-8 relative overflow-hidden">
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg px-6 py-8 sm:px-12 sm:py-10 relative overflow-hidden">
 
         {/* START SCREEN */}
         {quizState === 'START' && (
@@ -152,13 +152,13 @@ function App() {
               {questions[currentQuestionIndex].question}
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-4 sm:space-y-5">
               {questions[currentQuestionIndex].options.map((option, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSelectOption(idx)}
-                  className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 font-medium ${selectedAnswers[currentQuestionIndex] === idx
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  className={`w-full text-left px-6 py-5 rounded-xl border-2 transition-all duration-200 font-medium ${selectedAnswers[currentQuestionIndex] === idx
+                    ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm ring-2 ring-blue-500/30'
                     : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 text-gray-700'
                     }`}
                 >
@@ -170,7 +170,7 @@ function App() {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-end">
+            <div className="mt-12 flex justify-end">
               <button
                 onClick={nextQuestion}
                 disabled={selectedAnswers[currentQuestionIndex] === undefined}

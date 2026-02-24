@@ -1,50 +1,73 @@
-# React + TypeScript + Vite
+# 🎓 線上測驗系統 v3.2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一套**零成本、免架伺服器**的全自動線上測驗系統。  
+老師只需要一份 Google 試算表，就能完成出題、考試、收成績的完整流程。
 
-Currently, two official plugins are available:
+## 🏗️ 系統架構
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| 元件 | 說明 |
+|------|------|
+| **前端網頁** | React + TypeScript，部署在 GitHub Pages（免費） |
+| **後端資料庫** | Google 試算表 + Google Apps Script |
+| **連接方式** | 網址參數 `?api=GAS網址` 自動綁定 |
 
-## Expanding the ESLint configuration
+## ✨ 功能特色
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 📝 出題與管理
+- 所有題目在 Google 試算表的「題庫」分頁管理，支援四選一選擇題
+- 改題目只需打開手機 Google Sheets App，不需碰任何程式碼
 
-- Configure the top-level `parserOptions` property like this:
+### ⏰ 時間控制
+- 在題庫前兩行設定「開始時間」與「結束時間」
+- 時間未到 → 紅色警告 + 按鈕鎖死
+- 時間範圍內 → 顯示時間資訊，允許進入
+- 時間過了 → 自動關閉
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 👤 考生身份登記
+- 進入測驗前強制填寫「學號」與「姓名」
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 🛡️ 防弊機制
+- 禁止反白選取、複製、貼上、右鍵
+- 切換分頁或跳出瀏覽器 → 全螢幕黑色遮罩暫停測驗
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### 📊 自動成績回收
+- 交卷後自動計算百分制分數
+- 學號、姓名、分數、答案序列（A,C,B,D）、起止時間全部自動寫入「成績單」分頁
+- 交卷後無重新測驗按鈕，防止重複作答
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### 🔒 錯誤防護
+- 找不到題庫分頁 → 顯示錯誤，禁止進入
+- 網址錯誤 → 顯示讀取失敗
+- 右上角版號標記，確認系統版本
+
+## 📋 試算表格式
+
+### 題庫分頁
+
+| 列 | A | B | C | D | E | F |
+|----|---|---|---|---|---|---|
+| 1 | 開始時間 | 2026/12/01 10:00 | | | | |
+| 2 | 結束時間 | 2026/12/01 11:00 | | | | |
+| 3 | 題目 | 選項A | 選項B | 選項C | 選項D | 答案(0=A) |
+| 4+ | 你的題目... | ... | ... | ... | ... | 0~3 |
+
+### 成績單分頁
+
+| A | B | C | D | E | F |
+|---|---|---|---|---|---|
+| 學號 | 姓名 | 測驗分數 | 選擇答案 | 開始時間 | 結束時間 |
+
+## 🚀 使用方式
+
+1. 建立 Google 試算表，設定「題庫」與「成績單」分頁
+2. 貼上 Apps Script 程式碼，部署為網頁應用程式
+3. 組合連結：`https://CyrusSu66.github.io/quiz-app/?api=你的GAS網址`
+4. 把連結發給學生，開始考試！
+
+## 🔧 技術棧
+
+- React 18 + TypeScript
+- Vite 5
+- Tailwind CSS
+- Google Apps Script
+- GitHub Pages

@@ -429,14 +429,7 @@ function App() {
               </div>
             </div>
 
-            <div>
-              <button
-                onClick={() => window.location.reload()}
-                className="text-blue-600 hover:text-blue-800 font-semibold underline underline-offset-4"
-              >
-                重新啟動
-              </button>
-            </div>
+
           </div>
         )}
 

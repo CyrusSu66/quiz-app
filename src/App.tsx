@@ -39,7 +39,10 @@ function App() {
       fetch(apiParam)
         .then(res => res.json())
         .then(data => {
-          if (data.questions && data.timeConfig) {
+          if (data.result === 'error') {
+            setAvailabilityMessage(`系統錯誤：${data.message}`);
+            setIsTestAvailable(false);
+          } else if (data.questions && data.timeConfig) {
             setQuestions(data.questions);
             setTimeConfig(data.timeConfig);
             checkAvailability(data.timeConfig.startTime, data.timeConfig.endTime);

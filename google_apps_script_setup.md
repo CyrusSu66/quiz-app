@@ -23,10 +23,10 @@
 請在 `成績單` 分頁的第一列 (A1~F1) 填寫以下標題：
 * A1: `學號`
 * B1: `姓名`
-* C1: `開始時間`
-* D1: `結束時間`
-* E1: `選擇答案`
-* F1: `測驗分數`
+* C1: `測驗分數`
+* D1: `選擇答案`
+* E1: `開始時間`
+* F1: `結束時間`
 
 ### 2. 加入 Apps Script (魔法機器人)
 1. 在試算表上方選單點選 **擴充功能 (Extensions)** > **Apps Script**。
@@ -78,10 +78,10 @@ function doPost(e) {
     sheet.appendRow([
       data.studentId,
       data.studentName,
-      data.startTime,
-      data.endTime,
+      data.score,
       data.answersStr,
-      data.score
+      data.startTime,
+      data.endTime
     ]);
     
     return ContentService.createTextOutput(JSON.stringify({"result": "success"}))

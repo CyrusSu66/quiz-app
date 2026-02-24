@@ -38,22 +38,33 @@ function doGet(e) {
   if (!sheet) return responseError("找不到『題庫』分頁");
   
   var data = sheet.getDataRange().getValues();
-  var questions = [];
+  if (data.length < 3) return responseError("題庫資料格式不正確");
+
+  var startTimeStr = String(data[0][1]);
+  var endTimeStr = String(data[1][1]);
   
-  // 假設第一列是標題，從第二列開始讀取 (i=1)
-  for (var i = 1; i < data.length; i++) {
+  var payload = {
+    timeConfig: {
+      startTime: startTimeStr,
+      endTime: endTimeStr
+    },
+    questions: []
+  };
+  
+  // 假設第三列是標題，從第四列開始讀取 (i=3)
+  for (var i = 3; i < data.length; i++) {
     var row = data[i];
     if (!row[0]) continue; // 略過空白列
     
-    questions.push({
-      id: i,
+    payload.questions.push({
+      id: i - 2,
       question: String(row[0]),
       options: [String(row[1]), String(row[2]), String(row[3]), String(row[4])],
       answerIndex: Number(row[5])
     });
   }
   
-  return ContentService.createTextOutput(JSON.stringify(questions))
+  return ContentService.createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON);
 }
 

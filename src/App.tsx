@@ -25,6 +25,10 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
+  const [timeConfig, setTimeConfig] = useState<{ startTime: string, endTime: string } | null>(null);
+  const [isTestAvailable, setIsTestAvailable] = useState<boolean | null>(null);
+  const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
+
   // Load questions
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -35,11 +39,21 @@ function App() {
       fetch(apiParam)
         .then(res => res.json())
         .then(data => {
-          setQuestions(data);
+          if (data.questions && data.timeConfig) {
+            setQuestions(data.questions);
+            setTimeConfig(data.timeConfig);
+            checkAvailability(data.timeConfig.startTime, data.timeConfig.endTime);
+          } else {
+            // Fallback for older format or local json
+            setQuestions(Array.isArray(data) ? data : []);
+            setIsTestAvailable(true);
+          }
           setIsLoading(false);
         })
         .catch(err => {
           console.error("Error loading questions from API:", err);
+          setAvailabilityMessage('讀取題庫失敗，請確認網址是否正確。');
+          setIsTestAvailable(false);
           setIsLoading(false);
         });
     } else {
@@ -47,15 +61,42 @@ function App() {
       fetch(`${basePath}questions.json`)
         .then(res => res.json())
         .then(data => {
-          setQuestions(data);
+          setQuestions(Array.isArray(data) ? data : []);
+          setIsTestAvailable(true);
           setIsLoading(false);
         })
         .catch(err => {
           console.error("Error loading local questions:", err);
+          setIsTestAvailable(false);
           setIsLoading(false);
         });
     }
   }, []);
+
+  const checkAvailability = (startStr: string, endStr: string) => {
+    try {
+      const now = new Date();
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        setIsTestAvailable(true); // Default to available if parse fails
+        return;
+      }
+
+      if (now < start) {
+        setIsTestAvailable(false);
+        setAvailabilityMessage(`測驗尚未開放。 開放時間：${start.toLocaleString()}`);
+      } else if (now > end) {
+        setIsTestAvailable(false);
+        setAvailabilityMessage(`測驗已結束。 結束時間：${end.toLocaleString()}`);
+      } else {
+        setIsTestAvailable(true);
+      }
+    } catch {
+      setIsTestAvailable(true);
+    }
+  };
 
   // Anti-cheat: Window Focus
   useEffect(() => {
@@ -213,13 +254,30 @@ function App() {
         {quizState === 'START' && (
           <div className="text-center">
             <h1 className="text-4xl font-extrabold text-blue-600 mb-6">線上測驗系統</h1>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              準備好後，請點擊下方按鈕填寫資料。<br />
-              <span className="text-red-500 font-semibold text-sm">注意：測驗過程中禁止反白複製、點擊右鍵，若視窗失去焦點將會暫停測驗。</span>
-            </p>
+
+            {isTestAvailable === false ? (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 text-left">
+                <p className="text-red-700 font-bold">無法進行測驗</p>
+                <p className="text-red-600 mt-1">{availabilityMessage}</p>
+              </div>
+            ) : (
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                準備好後，請點擊下方按鈕填寫資料。<br />
+                <span className="text-red-500 font-semibold text-sm">注意：測驗過程中禁止反白複製、點擊右鍵，若視窗失去焦點將會暫停測驗。</span>
+              </p>
+            )}
+
+            {timeConfig && isTestAvailable && (
+              <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-lg mb-8 text-left border border-blue-100">
+                <p><span className="font-bold">開放時間：</span> {new Date(timeConfig.startTime).toLocaleString()}</p>
+                <p><span className="font-bold">結束時間：</span> {new Date(timeConfig.endTime).toLocaleString()}</p>
+              </div>
+            )}
+
             <button
               onClick={goToForm}
-              className="px-8 py-3 bg-blue-600 text-white rounded-full font-bold text-lg hover:bg-blue-700 transition shadow-md hover:shadow-xl transform hover:-translate-y-1"
+              disabled={isTestAvailable === false}
+              className={`px-8 py-3 rounded-full font-bold text-lg transition shadow-md w-full sm:w-auto ${isTestAvailable === false ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-1'}`}
             >
               進入報到
             </button>

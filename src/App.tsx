@@ -254,7 +254,7 @@ function App() {
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg px-6 py-8 sm:px-12 sm:py-10 relative overflow-hidden">
 
         {/* Version Badge */}
-        <span className="absolute top-3 right-4 text-xs text-gray-300 font-mono select-none">v3.1</span>
+        <span className="absolute top-3 right-4 text-xs text-gray-300 font-mono select-none">v3.2</span>
 
         {/* START SCREEN */}
         {quizState === 'START' && (

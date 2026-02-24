@@ -253,37 +253,60 @@ function App() {
 
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg px-6 py-8 sm:px-12 sm:py-10 relative overflow-hidden">
 
+        {/* Version Badge */}
+        <span className="absolute top-3 right-4 text-xs text-gray-300 font-mono select-none">v3.1</span>
+
         {/* START SCREEN */}
         {quizState === 'START' && (
           <div className="text-center">
             <h1 className="text-4xl font-extrabold text-blue-600 mb-6">線上測驗系統</h1>
 
-            {isTestAvailable === false ? (
-              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8 text-left">
-                <p className="text-red-700 font-bold">無法進行測驗</p>
-                <p className="text-red-600 mt-1">{availabilityMessage}</p>
-              </div>
+            {/* Case 1: Error or no questions loaded */}
+            {(isTestAvailable === false || questions.length === 0) ? (
+              <>
+                <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 text-left">
+                  <p className="text-red-700 font-bold">⚠️ 沒有測驗進行中</p>
+                  <p className="text-red-600 mt-1 text-sm">{availabilityMessage || '目前沒有可用的測驗資料，請聯繫老師確認。'}</p>
+                </div>
+
+                {/* Still show time info if we have it */}
+                {timeConfig && (
+                  <div className="bg-gray-50 text-gray-600 text-sm p-4 rounded-lg mb-6 text-left border border-gray-200">
+                    <p><span className="font-bold">測驗開始時間：</span> {new Date(timeConfig.startTime).toLocaleString()}</p>
+                    <p><span className="font-bold">測驗結束時間：</span> {new Date(timeConfig.endTime).toLocaleString()}</p>
+                  </div>
+                )}
+
+                <button
+                  disabled
+                  className="px-8 py-3 rounded-full font-bold text-lg bg-gray-300 text-gray-500 cursor-not-allowed w-full sm:w-auto"
+                >
+                  進入報到
+                </button>
+              </>
             ) : (
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                準備好後，請點擊下方按鈕填寫資料。<br />
-                <span className="text-red-500 font-semibold text-sm">注意：測驗過程中禁止反白複製、點擊右鍵，若視窗失去焦點將會暫停測驗。</span>
-              </p>
-            )}
+              /* Case 2: Test is available */
+              <>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  準備好後，請點擊下方按鈕填寫資料。<br />
+                  <span className="text-red-500 font-semibold text-sm">注意：測驗過程中禁止反白複製、點擊右鍵，若視窗失去焦點將會暫停測驗。</span>
+                </p>
 
-            {timeConfig && isTestAvailable && (
-              <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-lg mb-8 text-left border border-blue-100">
-                <p><span className="font-bold">開放時間：</span> {new Date(timeConfig.startTime).toLocaleString()}</p>
-                <p><span className="font-bold">結束時間：</span> {new Date(timeConfig.endTime).toLocaleString()}</p>
-              </div>
-            )}
+                {timeConfig && (
+                  <div className="bg-blue-50 text-blue-800 text-sm p-4 rounded-lg mb-6 text-left border border-blue-100">
+                    <p><span className="font-bold">測驗開始時間：</span> {new Date(timeConfig.startTime).toLocaleString()}</p>
+                    <p><span className="font-bold">測驗結束時間：</span> {new Date(timeConfig.endTime).toLocaleString()}</p>
+                  </div>
+                )}
 
-            <button
-              onClick={goToForm}
-              disabled={isTestAvailable === false}
-              className={`px-8 py-3 rounded-full font-bold text-lg transition shadow-md w-full sm:w-auto ${isTestAvailable === false ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-1'}`}
-            >
-              進入報到
-            </button>
+                <button
+                  onClick={goToForm}
+                  className="px-8 py-3 rounded-full font-bold text-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-md hover:shadow-xl transform hover:-translate-y-1 w-full sm:w-auto"
+                >
+                  進入報到
+                </button>
+              </>
+            )}
           </div>
         )}
 

@@ -69,7 +69,11 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  var lock = LockService.getScriptLock();
+  
   try {
+    lock.waitLock(10000); // 嘗試獲取鎖定，最多等待 10 秒
+    
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("成績單");
     if (!sheet) return responseError("找不到『成績單』分頁");
     
@@ -88,7 +92,9 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch(err) {
-    return responseError(err.toString());
+    return responseError("系統忙碌中或發生錯誤：" + err.toString());
+  } finally {
+    lock.releaseLock();
   }
 }
 

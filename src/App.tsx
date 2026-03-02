@@ -254,7 +254,13 @@ function App() {
       <div className="w-full max-w-2xl bg-white rounded-xl shadow-lg px-6 py-8 sm:px-12 sm:py-10 relative overflow-hidden">
 
         {/* Version Badge */}
-        <span className="absolute top-3 right-4 text-xs text-gray-300 font-mono select-none">v3.2</span>
+        {/* Version & Original Language Track Badge */}
+        <div className="absolute top-3 right-4 flex flex-col items-end select-none">
+          <span className="text-[10px] text-gray-300 font-mono tracking-tighter">
+            [Language Track: English - Original]
+          </span>
+          <span className="text-xs text-gray-400 font-mono">Version 3.3</span>
+        </div>
 
         {/* START SCREEN */}
         {quizState === 'START' && (
@@ -357,7 +363,7 @@ function App() {
           <div>
             <div className="flex justify-between items-center mb-6">
               <span className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-                問題 {currentQuestionIndex + 1} / {questions.length}
+                Question {currentQuestionIndex + 1} / {questions.length}
               </span>
               <div className="h-2 w-32 bg-gray-200 rounded-full overflow-hidden">
                 <div
@@ -367,9 +373,13 @@ function App() {
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-800 mb-8 leading-tight">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 leading-tight">
               {questions[currentQuestionIndex].question}
             </h2>
+
+            <div className="mb-4">
+              <span className="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded">Answer:</span>
+            </div>
 
             <div className="space-y-4 sm:space-y-5">
               {questions[currentQuestionIndex].options.map((option, idx) => (

@@ -10,8 +10,8 @@
 
 #### 設定「題庫」分頁
 請在 `題庫` 分頁依照以下格式填寫：
-* **第一列 (設定開放時間)**：A1 填寫 `開始時間`，B1 填寫 `2024-05-20 08:00` (格式：YYYY-MM-DD HH:mm)
-* **第二列 (設定結束時間)**：A2 填寫 `結束時間`，B2 填寫 `2024-05-20 18:00` (格式：YYYY-MM-DD HH:mm)
+* **第一列 (設定開放時間)**：A1 填寫 `開始時間`，B1 填寫 `2024-05-20` (日期)，C1 填寫 `8` (小時)，D1 填寫 `0` (分鐘)
+* **第二列 (設定結束時間)**：A2 填寫 `結束時間`，B2 填寫 `2024-05-20` (日期)，C2 填寫 `18` (小時)，D2 填寫 `0` (分鐘)
 * **第三列 (題目標題)**：在 A3~F3 填寫以下標題：
   * A3: `題目`
   * B3: `選項A`
@@ -43,8 +43,19 @@ function doGet(e) {
   var data = sheet.getDataRange().getValues();
   if (data.length < 3) return responseError("題庫資料格式不正確");
 
-  var startTimeStr = String(data[0][1]);
-  var endTimeStr = String(data[1][1]);
+  // 處理開始時間 (B1, C1, D1)
+  var startDateVal = new Date(data[0][1]);
+  var startHour = Number(data[0][2]);
+  var startMinute = Number(data[0][3]);
+  startDateVal.setHours(startHour, startMinute, 0, 0);
+  var startTimeStr = startDateVal.toISOString();
+
+  // 處理結束時間 (B2, C2, D2)
+  var endDateVal = new Date(data[1][1]);
+  var endHour = Number(data[1][2]);
+  var endMinute = Number(data[1][3]);
+  endDateVal.setHours(endHour, endMinute, 0, 0);
+  var endTimeStr = endDateVal.toISOString();
   
   var payload = {
     timeConfig: {
